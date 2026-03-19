@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "hosts")
 @Getter
@@ -21,6 +24,14 @@ public class Host extends BaseAuditableEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
+
+    @ManyToMany
+    @JoinTable(
+            name = "host_guests",
+            joinColumns = @JoinColumn(name = "host_id"),
+            inverseJoinColumns = @JoinColumn(name = "guest_id")
+    )
+    private Set<Guest> guests = new HashSet<>();
 
     public Host(String name, String surname, Country country) {
         this.name = name;
