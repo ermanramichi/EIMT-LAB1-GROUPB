@@ -5,7 +5,6 @@ import com.example.emtlabgroupb.model.domain.Category;
 import com.example.emtlabgroupb.model.domain.Condition;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public record DisplayAccommodationDto(
         Long id,
@@ -19,7 +18,6 @@ public record DisplayAccommodationDto(
         Integer numRooms,
         Boolean rented
 ) {
-
     public static DisplayAccommodationDto from(Accommodation accommodation) {
         return new DisplayAccommodationDto(
                 accommodation.getId(),
@@ -33,11 +31,5 @@ public record DisplayAccommodationDto(
                 accommodation.getNumRooms(),
                 accommodation.getRented()
         );
-    }
-
-    public static List<DisplayAccommodationDto> from(List<Accommodation> accommodations) {
-        return accommodations.stream()
-                .map(DisplayAccommodationDto::from)
-                .toList();
     }
 }
