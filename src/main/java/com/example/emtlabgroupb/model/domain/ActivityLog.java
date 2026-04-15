@@ -27,9 +27,16 @@ public class ActivityLog {
     @Column(nullable = false)
     private String eventType;
 
-    public ActivityLog(String accommodationName, LocalDateTime eventTimestamp, String eventType) {
+    private Long accommodationId;
+
+    private Long hostId;
+
+    public ActivityLog(String accommodationName, LocalDateTime eventTimestamp,
+                       String eventType, Long accommodationId, Long hostId) {
         this.accommodationName = accommodationName;
         this.eventTimestamp = eventTimestamp;
         this.eventType = eventType;
+        this.accommodationId = accommodationId;
+        this.hostId = hostId;
     }
 }

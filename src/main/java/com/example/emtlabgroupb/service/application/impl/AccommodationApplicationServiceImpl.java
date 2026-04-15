@@ -5,6 +5,8 @@ import com.example.emtlabgroupb.model.domain.Category;
 import com.example.emtlabgroupb.model.domain.Host;
 import com.example.emtlabgroupb.model.dto.CreateAccommodationDto;
 import com.example.emtlabgroupb.model.dto.DisplayAccommodationDto;
+import com.example.emtlabgroupb.model.dto.PopularAccommodationDto;
+import com.example.emtlabgroupb.model.dto.PopularHostDto;
 import com.example.emtlabgroupb.model.exception.HostNotFoundException;
 import com.example.emtlabgroupb.model.projection.AccommodationExtendedProjection;
 import com.example.emtlabgroupb.model.projection.AccommodationShortProjection;
@@ -112,5 +114,24 @@ public class AccommodationApplicationServiceImpl implements AccommodationApplica
     @Override
     public Page<ActivityLog> findActivityLog(Pageable pageable) {
         return activityLogRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<PopularAccommodationDto> findMostPopularAccommodations(Pageable pageable) {
+        return activityLogRepository.findMostPopularAccommodations(pageable)
+                .map(row -> new PopularAccommodationDto(
+                        (Long) row[0],
+                        (String) row[1],
+                        (Long) row[2]
+                ));
+    }
+
+    @Override
+    public Page<PopularHostDto> findMostPopularHosts(Pageable pageable) {
+        return activityLogRepository.findMostPopularHosts(pageable)
+                .map(row -> new PopularHostDto(
+                        (Long) row[0],
+                        (Long) row[1]
+                ));
     }
 }

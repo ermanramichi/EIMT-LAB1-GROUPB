@@ -31,7 +31,9 @@ public class AccommodationRentedListener {
         ActivityLog logEntry = new ActivityLog(
                 accommodation.getName(),
                 LocalDateTime.now(),
-                "ACCOMMODATION_RENTED"
+                "ACCOMMODATION_RENTED",
+                accommodation.getId(),
+                accommodation.getHost().getId()
         );
         activityLogRepository.save(logEntry);
     }

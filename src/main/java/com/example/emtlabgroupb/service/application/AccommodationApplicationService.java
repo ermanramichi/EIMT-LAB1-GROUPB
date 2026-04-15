@@ -3,6 +3,8 @@ package com.example.emtlabgroupb.service.application;
 import com.example.emtlabgroupb.model.domain.ActivityLog;
 import com.example.emtlabgroupb.model.dto.DisplayAccommodationDto;
 import com.example.emtlabgroupb.model.dto.CreateAccommodationDto;
+import com.example.emtlabgroupb.model.dto.PopularAccommodationDto;
+import com.example.emtlabgroupb.model.dto.PopularHostDto;
 import com.example.emtlabgroupb.model.projection.AccommodationExtendedProjection;
 import com.example.emtlabgroupb.model.projection.AccommodationShortProjection;
 import com.example.emtlabgroupb.model.views.AccommodationViewEntity;
@@ -14,6 +16,9 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface AccommodationApplicationService {
+
+    Page<PopularAccommodationDto> findMostPopularAccommodations(Pageable pageable);
+    Page<PopularHostDto> findMostPopularHosts(Pageable pageable);
 
     Optional<DisplayAccommodationDto> findById(Long id);
 

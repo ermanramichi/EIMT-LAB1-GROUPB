@@ -4,6 +4,8 @@ import com.example.emtlabgroupb.model.domain.ActivityLog;
 import com.example.emtlabgroupb.model.domain.Category;
 import com.example.emtlabgroupb.model.dto.CreateAccommodationDto;
 import com.example.emtlabgroupb.model.dto.DisplayAccommodationDto;
+import com.example.emtlabgroupb.model.dto.PopularAccommodationDto;
+import com.example.emtlabgroupb.model.dto.PopularHostDto;
 import com.example.emtlabgroupb.model.projection.AccommodationExtendedProjection;
 import com.example.emtlabgroupb.model.projection.AccommodationShortProjection;
 import com.example.emtlabgroupb.model.views.AccommodationViewEntity;
@@ -156,5 +158,22 @@ public class AccommodationController {
         return accommodationApplicationService.markAsRented(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    @GetMapping("/popular/accommodations")
+    @Operation(summary = "Most popular accommodations ranked by number of bookings")
+    public Page<PopularAccommodationDto> findMostPopularAccommodations(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return accommodationApplicationService.findMostPopularAccommodations(PageRequest.of(page, size));
+    }
+
+    @GetMapping("/popular/hosts")
+    @Operation(summary = "Most popular hosts ranked by total bookings across their accommodations")
+    public Page<PopularHostDto> findMostPopularHosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return accommodationApplicationService.findMostPopularHosts(PageRequest.of(page, size));
     }
 }

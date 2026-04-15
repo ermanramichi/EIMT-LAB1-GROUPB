@@ -31,7 +31,9 @@ public class AccommodationFullyOccupiedListener {
         ActivityLog logEntry = new ActivityLog(
                 accommodation.getName(),
                 LocalDateTime.now(),
-                "ACCOMMODATION_FULLY_OCCUPIED"
+                "ACCOMMODATION_FULLY_OCCUPIED",
+                accommodation.getId(),
+                accommodation.getHost().getId()
         );
         activityLogRepository.save(logEntry);
     }
