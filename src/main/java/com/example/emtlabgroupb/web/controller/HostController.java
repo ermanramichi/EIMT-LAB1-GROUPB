@@ -1,9 +1,12 @@
 package com.example.emtlabgroupb.web.controller;
 
+import com.example.emtlabgroupb.model.dto.CreateHostDto;
 import com.example.emtlabgroupb.model.dto.DisplayHostDto;
 import com.example.emtlabgroupb.service.domain.HostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,5 +38,31 @@ public class HostController {
                 .map(DisplayHostDto::from)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/add")
+    @Operation(summary = "Create a new host")
+    public ResponseEntity<DisplayHostDto> create(@Valid @RequestBody CreateHostDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(DisplayHostDto.from(hostService.save(dto)));
+    }
+
+    @PutMapping("/edit/{id}")
+    @Operation(summary = "Update an existing host")
+    public ResponseEntity<DisplayHostDto> update(@PathVariable Long id,
+                                                 @Valid @RequestBody CreateHostDto dto) {
+        return hostService.update(id, dto)
+                .map(DisplayHostDto::from)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete a host")
+    public ResponseEntity<DisplayHostDto> delete(@PathVariable Long id) {
+        return hostService.deleteById(id)
+                .map(DisplayHostDto::from)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

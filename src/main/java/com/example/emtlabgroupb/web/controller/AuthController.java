@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,23 +39,25 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    @Operation(summary = "Register a new user")
+    @Operation(summary = "Register a new user. Accepts an optional 'role' field (USER or ADMINISTRATOR).")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto dto) {
         if (userRepository.existsByUsername(dto.username())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
         }
 
+        Role role = Role.fromAny(dto.role());
+
         User user = new User(
                 dto.username(),
                 passwordEncoder.encode(dto.password()),
                 dto.name(),
-                Role.ROLE_USER
+                role
         );
         userRepository.save(user);
 
         String token = jwtHelper.generateToken(user);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new JwtResponseDto(token, user.getUsername(), user.getName(), user.getRole().name()));
+                .body(new JwtResponseDto(token, user.getUsername(), user.getName(), user.getRole().displayName()));
     }
 
     @PostMapping("/login")
@@ -66,10 +67,9 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(dto.username(), dto.password())
         );
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtHelper.generateToken(userDetails);
-
         User user = userRepository.findByUsername(dto.username()).orElseThrow();
-        return ResponseEntity.ok(new JwtResponseDto(token, user.getUsername(), user.getName(), user.getRole().name()));
+        String token = jwtHelper.generateToken(user);
+
+        return ResponseEntity.ok(new JwtResponseDto(token, user.getUsername(), user.getName(), user.getRole().displayName()));
     }
 }
